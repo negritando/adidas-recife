@@ -12,23 +12,26 @@
     document.addEventListener("DOMContentLoaded", function() {
       const sceneEl = document.querySelector('a-scene');
       const loadingAnimation = document.getElementById('loadingAnimation');
-      const scanningAnimation = document.getElementById('scanningAnimation');
+      // const scanningAnimation = document.getElementById('scanningAnimation');
 
-      loadingAnimation.addEventListener('loaded', () => {
-        console.log('Loading animation loaded successfully');
+      // Mostrar animação de carregamento ao iniciar a cena
+      loadingAnimation.setAttribute('visible', 'true');
+      // scanningAnimation.setAttribute('visible', 'false'); // Esconder escaneamento inicialmente
+
+      sceneEl.addEventListener("targetFound", event => {
+        console.log("target found");
+        loadingAnimation.setAttribute('visible', 'false'); // Esconder carregamento
+        // setTimeout(() => {
+        //   scanningAnimation.setAttribute('visible', 'true'); // Mostrar escaneamento após um pequeno atraso
+        // }, 500); // Atraso de 500 ms
       });
 
-
-      scanningAnimation.addEventListener('loaded', () => {
-        console.log('Scanning animation loaded successfully');
+      sceneEl.addEventListener("targetLost", event => {
+        console.log("target lost");
+        // scanningAnimation.setAttribute('visible', 'false'); // Esconder escaneamento
+        loadingAnimation.setAttribute('visible', 'true'); // Mostrar carregamento novamente se necessário
       });
-
-      const avatarModel = document.getElementById('avatarModel');
-      avatarModel.addEventListener('loaded', () => {
-        console.log('Avatar model loaded successfully');
-      });
-    }
-
+    });
   </script>
   <title>Adidas - Ultraboost 5</title>
 </head>
@@ -40,16 +43,16 @@
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: true">
 
-    <a-assets timeout="5000">
+    <a-assets>
       <a-asset-item id="avatarModel" src="assets/ultraboost.gltf"></a-asset-item>
       <img id="loading" src="assets/loading.gif" />
-      <img id="scanning" src="assets/scanning.gif" />
+      <!-- <img id="scanning" src="assets/scanning.gif" /> -->
     </a-assets>
 
     <!-- Animação de carregamento -->
-    <a-image src="#loading" position="0 1 -2" visible="false" id="loadingAnimation"></a-image>
+    <a-image src="#loading" position="0 1 -2" visible="false" id="loadingAnimation" scale="0.5 0.5 0.5"></a-image>
     <!-- Animação de escaneamento -->
-    <a-image src="#scanning" position="0 1 -2" visible="false" id="scanningAnimation"></a-image>
+    <!-- <a-image src="#scanning" position="0 1 -3" visible="false" id="scanningAnimation" scale="0.5 0.5 0.5"></a-image> -->
 
     <a-camera position="0 0 1" look-controls="enabled: false"></a-camera>
 
