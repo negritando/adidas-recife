@@ -118,7 +118,7 @@
 		{
 			"mimeType":"image/png",
 			"name":"baked_mesh_tex0",
-			"uri":"assets/baked_mesh_tex0.png"
+			"uri":"baked_mesh_tex0.png"
 		}
 	],
 	"accessors":[
