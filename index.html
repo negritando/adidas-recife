@@ -14,20 +14,21 @@
       const loadingAnimation = document.getElementById('loadingAnimation');
       const scanningAnimation = document.getElementById('scanningAnimation');
 
-      // Mostrar animação de carregamento ao iniciar a cena
-      loadingAnimation.setAttribute('visible', 'true');
-
-      sceneEl.addEventListener("targetFound", event => {
-        console.log("target found");
-        loadingAnimation.setAttribute('visible', 'false');
-        scanningAnimation.setAttribute('visible', 'true'); // Exibir animação de escaneamento
+      loadingAnimation.addEventListener('loaded', () => {
+        console.log('Loading animation loaded successfully');
       });
 
-      sceneEl.addEventListener("targetLost", event => {
-        console.log("target lost");
-        scanningAnimation.setAttribute('visible', 'false');
+
+      scanningAnimation.addEventListener('loaded', () => {
+        console.log('Scanning animation loaded successfully');
       });
-    });
+
+      const avatarModel = document.getElementById('avatarModel');
+      avatarModel.addEventListener('loaded', () => {
+        console.log('Avatar model loaded successfully');
+      });
+    }
+
   </script>
   <title>Adidas - Ultraboost 5</title>
 </head>
@@ -39,7 +40,7 @@
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: true">
 
-    <a-assets>
+    <a-assets timeout="5000">
       <a-asset-item id="avatarModel" src="assets/ultraboost.gltf"></a-asset-item>
       <img id="loading" src="assets/loading.gif" />
       <img id="scanning" src="assets/scanning.gif" />
