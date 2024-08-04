@@ -118,7 +118,7 @@
 		{
 			"mimeType":"image/png",
 			"name":"baked_mesh_tex0",
-			"uri":"ULTRABOOST/baked_mesh_tex0.png"
+			"uri":"assets/baked_mesh_tex0.png"
 		}
 	],
 	"accessors":[
@@ -262,7 +262,7 @@
 	"buffers":[
 		{
 			"byteLength":872576,
-			"uri":"utraboost.bin"
+			"uri":"ultraboost.bin"
 		}
 	]
 }
