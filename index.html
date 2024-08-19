@@ -36,21 +36,16 @@
       setTimeout(() => {
         console.log("Iniciando escaneamento após o atraso");
 
-        // Iniciar o escaneamento após o atraso
+        // Esconder a animação de carregamento após o atraso e ao encontrar o alvo
         sceneEl.addEventListener("targetFound", event => {
           console.log("Alvo encontrado");
           loadingAnimation.style.display = 'none'; // Esconder carregamento
         });
 
-        sceneEl.addEventListener("targetLost", event => {
-          console.log("Alvo perdido");
-          loadingAnimation.style.display = 'block'; // Mostrar carregamento novamente se necessário
-        });
-
         // Verificar se a cena foi carregada completamente
         sceneEl.addEventListener('loaded', () => {
           console.log('Cena carregada');
-          // Opcionalmente, pode-se esconder a animação aqui também, se necessário.
+          loadingAnimation.style.display = 'none'; // Esconder carregamento ao carregar a cena
         });
 
       }, scanDelay); // Atraso antes do escaneamento começar
