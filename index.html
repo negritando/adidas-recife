@@ -5,32 +5,31 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-      /* Ocultar animação de carregamento padrão da biblioteca */
-      .mindar-ui-loading .loader {
-        display: none !important; /* Esconde a animação de carregamento padrão */
-      }
+    /* Ocultar animação de carregamento padrão da biblioteca */
+    .mindar-ui-loading .loader {
+      display: none !important; /* Esconde a animação de carregamento padrão */
+    }
 
-      /* Estilizando a animação de carregamento */
-      #loadingAnimation {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        display: none; /* Inicia como oculto */
-        opacity: 0;
-        transition: opacity 1s ease-in-out; /* Transição para fade-in/fade-out */
-      }
+    /* Estilizando a animação de carregamento */
+    #loadingAnimation {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 1s ease-in-out; /* Transição para fade-in/fade-out */
+    }
 
-      /* Classe para fade-in */
-      .fade-in {
-        opacity: 1;
-      }
+    /* Classe para fade-in */
+    .fade-in {
+      opacity: 1;
+    }
 
-      /* Classe para fade-out */
-      .fade-out {
-        opacity: 0;
-      }
+    /* Classe para fade-out */
+    .fade-out {
+      opacity: 0;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -38,62 +37,62 @@
   <script src="https://unpkg.com/aframe-chromakey-material/dist/aframe-chromakey-material.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-    const sceneEl = document.querySelector('a-scene');
-    const loadingAnimation = document.getElementById('loadingAnimation');
+      const sceneEl = document.querySelector('a-scene');
+      const loadingAnimation = document.getElementById('loadingAnimation');
 
-    // Função para mostrar a animação de carregamento com fade-in
-    function showLoading() {
-      loadingAnimation.style.display = 'block';
-      setTimeout(() => {
-        loadingAnimation.classList.add('fade-in');
-      }, 10); // Pequeno atraso para garantir a transição
-    }
-
-    // Função para esconder a animação de carregamento com fade-out
-    function hideLoading() {
-      loadingAnimation.classList.remove('fade-in');
-      loadingAnimation.classList.add('fade-out');
-      setTimeout(() => {
-        loadingAnimation.style.display = 'none';
-        loadingAnimation.classList.remove('fade-out');
-      }, 1000); // Tempo da transição de 1s
-    }
-
-    // Mostrar animação de carregamento ao iniciar a cena
-    showLoading();
-
-    // Definir um tempo de espera antes de permitir o escaneamento
-    const scanDelay = 1000; // 3 segundos de atraso
-    setTimeout(() => {
-      console.log("Iniciando escaneamento após o atraso");
-
-      // Iniciar o escaneamento após o atraso
-      sceneEl.addEventListener("targetFound", event => {
-        console.log("Alvo encontrado");
-        hideLoading(); // Esconder carregamento com fade-out
-      });
-
-      sceneEl.addEventListener("targetLost", event => {
-        console.log("Alvo perdido");
-        showLoading(); // Mostrar carregamento novamente com fade-in
-      });
-
-      // Verificar se a cena foi carregada completamente
-      sceneEl.addEventListener('loaded', () => {
-        console.log('Cena carregada');
-        // Opcionalmente, pode-se esconder a animação aqui também, se necessário.
-      });
-
-    }, scanDelay); // Atraso antes do escaneamento começar
-
-    // Timeout adicional para garantir que a animação de carregamento não fique presa
-    setTimeout(() => {
-      if (loadingAnimation.style.display === 'block') {
-        console.log("Falha na detecção do alvo, ocultando a animação");
-        hideLoading(); // Ocultar animação se necessário
+      // Função para mostrar a animação de carregamento com fade-in
+      function showLoading() {
+        loadingAnimation.style.display = 'block'; // Garantir que esteja visível
+        setTimeout(() => {
+          loadingAnimation.classList.add('fade-in'); // Inicia fade-in
+        }, 10); // Pequeno atraso para garantir a transição
       }
-    }, scanDelay + 1000); // 10 segundos após o atraso inicial
-  });
+
+      // Função para esconder a animação de carregamento com fade-out
+      function hideLoading() {
+        loadingAnimation.classList.remove('fade-in'); // Remove fade-in
+        loadingAnimation.classList.add('fade-out'); // Inicia fade-out
+        setTimeout(() => {
+          loadingAnimation.style.display = 'none'; // Esconder após fade-out
+          loadingAnimation.classList.remove('fade-out'); // Resetar classes
+        }, 1000); // Tempo da transição de 1s
+      }
+
+      // Mostrar animação de carregamento ao iniciar a cena
+      showLoading();
+
+      // Definir um tempo de espera antes de permitir o escaneamento
+      const scanDelay = 3000; // 3 segundos de atraso
+      setTimeout(() => {
+        console.log("Iniciando escaneamento após o atraso");
+
+        // Iniciar o escaneamento após o atraso
+        sceneEl.addEventListener("targetFound", event => {
+          console.log("Alvo encontrado");
+          hideLoading(); // Esconder carregamento com fade-out
+        });
+
+        sceneEl.addEventListener("targetLost", event => {
+          console.log("Alvo perdido");
+          showLoading(); // Mostrar carregamento novamente com fade-in
+        });
+
+        // Verificar se a cena foi carregada completamente
+        sceneEl.addEventListener('loaded', () => {
+          console.log('Cena carregada');
+          // Opcionalmente, pode-se esconder a animação aqui também, se necessário.
+        });
+
+      }, scanDelay); // Atraso antes do escaneamento começar
+
+      // Timeout adicional para garantir que a animação de carregamento não fique presa
+      setTimeout(() => {
+        if (loadingAnimation.style.display === 'block') {
+          console.log("Falha na detecção do alvo, ocultando a animação");
+          hideLoading(); // Ocultar animação se necessário
+        }
+      }, scanDelay + 10000); // 10 segundos após o atraso inicial
+    });
   </script>
   <title>Adidas - Ultraboost 5</title>
 </head>
