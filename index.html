@@ -31,28 +31,37 @@
       // Mostrar animação de carregamento ao iniciar a cena
       loadingAnimation.style.display = 'block';
 
-      sceneEl.addEventListener('loaded', () => {
-        console.log('Cena carregada');
-        loadingAnimation.style.display = 'block'; // Mostra a animação de carregamento
-      });
+      // Definir um tempo de espera antes de permitir o escaneamento
+      const scanDelay = 3000; // 3 segundos de atraso
+      setTimeout(() => {
+        console.log("Iniciando escaneamento após o atraso");
 
-      sceneEl.addEventListener("targetFound", event => {
-        console.log("Alvo encontrado");
-        loadingAnimation.style.display = 'none'; // Esconde a animação de carregamento
-      });
+        // Iniciar o escaneamento após o atraso
+        sceneEl.addEventListener("targetFound", event => {
+          console.log("Alvo encontrado");
+          loadingAnimation.style.display = 'none'; // Esconder carregamento
+        });
 
-      sceneEl.addEventListener("targetLost", event => {
-        console.log("Alvo perdido");
-        loadingAnimation.style.display = 'block'; // Mostra novamente a animação de carregamento
-      });
+        sceneEl.addEventListener("targetLost", event => {
+          console.log("Alvo perdido");
+          loadingAnimation.style.display = 'block'; // Mostrar carregamento novamente se necessário
+        });
 
-      // Certifique-se de que o carregamento é interrompido após algum tempo
+        // Verificar se a cena foi carregada completamente
+        sceneEl.addEventListener('loaded', () => {
+          console.log('Cena carregada');
+          // Opcionalmente, pode-se esconder a animação aqui também, se necessário.
+        });
+
+      }, scanDelay); // Atraso antes do escaneamento começar
+
+      // Timeout adicional para garantir que a animação de carregamento não fique presa
       setTimeout(() => {
         if (loadingAnimation.style.display === 'block') {
           console.log("Falha na detecção do alvo, ocultando a animação");
           loadingAnimation.style.display = 'none';
         }
-      }, 10000); // 10 segundos de timeout para garantir que a animação não fique presa
+      }, scanDelay + 10000); // 10 segundos após o atraso inicial
     });
   </script>
   <title>Adidas - Ultraboost 5</title>
