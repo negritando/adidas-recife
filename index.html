@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     /* Ocultar animação de carregamento padrão da biblioteca */
-    .mindar-loading {
+    .mindar-ui-scanning .scanning .inner{
       display: none !important; /* Esconde a animação de carregamento padrão */
     }
   </style>
@@ -17,16 +17,16 @@
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const sceneEl = document.querySelector('a-scene');
-      //const loadingAnimation = document.getElementById('loadingAnimation');
+      const loadingAnimation = document.getElementById('loadingAnimation');
       // const scanningAnimation = document.getElementById('scanningAnimation');
 
       // Mostrar animação de carregamento ao iniciar a cena
-      //loadingAnimation.setAttribute('visible', 'true');
+      loadingAnimation.setAttribute('visible', 'true');
       // scanningAnimation.setAttribute('visible', 'false'); // Esconder escaneamento inicialmente
 
       sceneEl.addEventListener("targetFound", event => {
         console.log("target found");
-        // loadingAnimation.setAttribute('visible', 'false'); // Esconder carregamento
+        loadingAnimation.setAttribute('visible', 'false'); // Esconder carregamento
         // setTimeout(() => {
         //   scanningAnimation.setAttribute('visible', 'true'); // Mostrar escaneamento após um pequeno atraso
         // }, 500); // Atraso de 500 ms
@@ -35,7 +35,7 @@
       sceneEl.addEventListener("targetLost", event => {
         console.log("target lost");
         // scanningAnimation.setAttribute('visible', 'false'); // Esconder escaneamento
-        // loadingAnimation.setAttribute('visible', 'true'); // Mostrar carregamento novamente se necessário
+        loadingAnimation.setAttribute('visible', 'true'); // Mostrar carregamento novamente se necessário
       });
     });
   </script>
@@ -51,7 +51,7 @@
 
     <a-assets>
       <a-asset-item id="avatarModel" src="assets/ultraboost.gltf"></a-asset-item>
-      <!-- <img id="loading" src="assets/loading.gif" /> -->
+      <img id="loading" src="assets/loading.gif" />
       <!-- <img id="scanning" src="assets/scanning.gif" /> -->
     </a-assets>
     <!--<a-image src="#loading" position="0 1 -2" visible="false" id="loadingAnimation" scale="0.5 0.5 0.5"></a-image>-->
