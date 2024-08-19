@@ -31,21 +31,28 @@
       // Mostrar animação de carregamento ao iniciar a cena
       loadingAnimation.style.display = 'block';
 
+      sceneEl.addEventListener('loaded', () => {
+        console.log('Cena carregada');
+        loadingAnimation.style.display = 'block'; // Mostra a animação de carregamento
+      });
+
       sceneEl.addEventListener("targetFound", event => {
-        console.log("target found");
-        loadingAnimation.style.display = 'none'; // Esconder carregamento
+        console.log("Alvo encontrado");
+        loadingAnimation.style.display = 'none'; // Esconde a animação de carregamento
       });
 
       sceneEl.addEventListener("targetLost", event => {
-        console.log("target lost");
-        loadingAnimation.style.display = 'block'; // Mostrar carregamento novamente se necessário
+        console.log("Alvo perdido");
+        loadingAnimation.style.display = 'block'; // Mostra novamente a animação de carregamento
       });
 
-      // Certifique-se de que a cena foi carregada completamente
-      sceneEl.addEventListener('loaded', () => {
-        console.log('Cena carregada');
-        loadingAnimation.style.display = 'none';
-      });
+      // Certifique-se de que o carregamento é interrompido após algum tempo
+      setTimeout(() => {
+        if (loadingAnimation.style.display === 'block') {
+          console.log("Falha na detecção do alvo, ocultando a animação");
+          loadingAnimation.style.display = 'none';
+        }
+      }, 10000); // 10 segundos de timeout para garantir que a animação não fique presa
     });
   </script>
   <title>Adidas - Ultraboost 5</title>
