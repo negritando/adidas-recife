@@ -40,6 +40,12 @@
         console.log("target lost");
         loadingAnimation.style.display = 'block'; // Mostrar carregamento novamente se necessário
       });
+
+      // Certifique-se de que a cena foi carregada completamente
+      sceneEl.addEventListener('loaded', () => {
+        console.log('Cena carregada');
+        loadingAnimation.style.display = 'none';
+      });
     });
   </script>
   <title>Adidas - Ultraboost 5</title>
