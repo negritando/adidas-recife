@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adidas - Ultraboost 5</title>
   <style>
     /* Ocultar animação de carregamento padrão da biblioteca */
     .mindar-ui-loading .loader {
@@ -19,23 +19,17 @@
       display: none;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
-  <script src="https://unpkg.com/aframe-chromakey-material/dist/aframe-chromakey-material.min.js"></script>
   <script src="https://unpkg.com/aframe-gesture-detector-component/dist/aframe-gesture-detector-component.min.js"></script>
   <script>
-    // Componente personalizado para rotação baseada em gesto
     AFRAME.registerComponent('rotate-on-gesture', {
-      schema: {
-        enabled: {default: true}
-      },
-      init: function() {
-        this.el.addEventListener('gesture-rotate', this.onRotate.bind(this));
-      },
-      onRotate: function(evt) {
-        if (!this.data.enabled) return;
-        this.el.object3D.rotation.y += evt.detail.rotation * (Math.PI / 180);
+      schema: { type: 'number', default: 1 },
+      init: function () {
+        this.el.sceneEl.addEventListener('gesture-rotate', (event) => {
+          this.el.object3D.rotation.y += event.detail.rotation * this.data;
+        });
       }
     });
 
@@ -46,38 +40,27 @@
       // Mostrar animação de carregamento ao iniciar a cena
       loadingAnimation.style.display = 'block';
 
-      // Definir um tempo de espera antes de permitir o escaneamento
-      const scanDelay = 1000;
-      setTimeout(() => {
-        console.log("Iniciando escaneamento após o atraso");
+      // Esconder a animação de carregamento após o atraso e ao encontrar o alvo
+      sceneEl.addEventListener("targetFound", () => {
+        loadingAnimation.style.display = 'none';
+      });
 
-        // Esconder a animação de carregamento após o atraso e ao encontrar o alvo
-        sceneEl.addEventListener("targetFound", event => {
-          console.log("Alvo encontrado");
-          loadingAnimation.style.display = 'none';
-        });
-
-        sceneEl.addEventListener('loaded', () => {
-          console.log('Cena carregada');
-          loadingAnimation.style.display = 'none';
-        });
-
-      }, scanDelay);
+      sceneEl.addEventListener('loaded', () => {
+        loadingAnimation.style.display = 'none';
+      });
 
       // Timeout adicional para garantir que a animação de carregamento não fique presa
       setTimeout(() => {
         if (loadingAnimation.style.display === 'block') {
-          console.log("Falha na detecção do alvo, ocultando a animação");
           loadingAnimation.style.display = 'none';
         }
-      }, scanDelay + 5000);
+      }, 6000); // Tempo total de exibição do loading
     });
   </script>
-  <title>Adidas - Ultraboost 5</title>
 </head>
 <body>
   <!-- Animação de carregamento usando uma tag img -->
-  <img id="loadingAnimation" src="assets/loading.gif" />
+  <img id="loadingAnimation" src="assets/loading.gif">
 
   <a-scene
     mindar-image="imageTargetSrc: assets/targets.mind; filterMinCF: 0.001; filterBeta: 0.01; loading: false"
@@ -98,7 +81,7 @@
         scale="0.18 0.18 0.18"  
         rotation="0 270 0"
         position="0.3 -0.2 0"
-        rotate-on-gesture>
+        rotate-on-gesture="1">
       </a-gltf-model>
     </a-entity>
   </a-scene>
