@@ -18,23 +18,32 @@
       z-index: 10;
       display: none;
     }
+    /* Estilos para os botões de controle */
+    .control-buttons {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .control-buttons button {
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 50%;
+      border: none;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      cursor: pointer;
+    }
   </style>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
-  <script src="https://unpkg.com/aframe-gesture-detector-component/dist/aframe-gesture-detector-component.min.js"></script>
   <script>
-    AFRAME.registerComponent('rotate-on-gesture', {
-      schema: { type: 'number', default: 1 },
-      init: function () {
-        this.el.sceneEl.addEventListener('gesture-rotate', (event) => {
-          this.el.object3D.rotation.y += event.detail.rotation * this.data;
-        });
-      }
-    });
-
     document.addEventListener("DOMContentLoaded", function() {
       const sceneEl = document.querySelector('a-scene');
+      const modelEl = document.querySelector('a-gltf-model');
       const loadingAnimation = document.getElementById('loadingAnimation');
 
       // Mostrar animação de carregamento ao iniciar a cena
@@ -55,6 +64,15 @@
           loadingAnimation.style.display = 'none';
         }
       }, 6000); // Tempo total de exibição do loading
+
+      // Funções para rotação do modelo
+      document.getElementById('rotateLeft').addEventListener('click', () => {
+        modelEl.object3D.rotation.y += 0.1;
+      });
+
+      document.getElementById('rotateRight').addEventListener('click', () => {
+        modelEl.object3D.rotation.y -= 0.1;
+      });
     });
   </script>
 </head>
@@ -75,15 +93,21 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex:0" gesture-detector>
+    <a-entity mindar-image-target="targetIndex:0">
       <a-gltf-model
+        id="avatarModel"
         src="#avatarModel"
         scale="0.18 0.18 0.18"  
         rotation="0 270 0"
-        position="0.3 -0.2 0"
-        rotate-on-gesture="1">
+        position="0.3 -0.2 0">
       </a-gltf-model>
     </a-entity>
   </a-scene>
+
+  <!-- Botões de controle para rotação -->
+  <div class="control-buttons">
+    <button id="rotateLeft">⟲</button>
+    <button id="rotateRight">⟳</button>
+  </div>
 </body>
 </html>
