@@ -32,7 +32,7 @@
       loadingAnimation.style.display = 'block';
 
       // Definir um tempo de espera antes de permitir o escaneamento
-      const scanDelay = 3000; // 3 segundos de atraso
+      const scanDelay = 1000; // 3 segundos de atraso
       setTimeout(() => {
         console.log("Iniciando escaneamento após o atraso");
 
@@ -56,7 +56,7 @@
           console.log("Falha na detecção do alvo, ocultando a animação");
           loadingAnimation.style.display = 'none';
         }
-      }, scanDelay + 10000); // 10 segundos após o atraso inicial
+      }, scanDelay + 1000); // 10 segundos após o atraso inicial
     });
   </script>
   <title>Adidas - Ultraboost 5</title>
