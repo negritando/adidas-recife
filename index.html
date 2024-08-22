@@ -7,7 +7,7 @@
   <style>
     /* Ocultar animação de carregamento padrão da biblioteca */
     .mindar-ui-loading .loader {
-      display: none !important; /* Esconde a animação de carregamento padrão */
+      display: none !important;
     }
     /* Estilizando a animação de carregamento */
     #loadingAnimation {
@@ -16,31 +16,26 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
-      display: none; /* Inicia como oculto */
+      display: none;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://unpkg.com/aframe-chromakey-material/dist/aframe-chromakey-material.min.js"></script>
-
-  <!-- Componente gesture-detector para detectar gestos de rotação -->
-  <script src="https://cdn.jsdelivr.net/npm/aframe-gesture-detector-component/dist/aframe-gesture-detector.min.js"></script>
+  <script src="https://unpkg.com/aframe-gesture-detector-component/dist/aframe-gesture-detector-component.min.js"></script>
   <script>
+    // Componente personalizado para rotação baseada em gesto
     AFRAME.registerComponent('rotate-on-gesture', {
       schema: {
-        rotationSpeed: {type: 'number', default: 1}
+        enabled: {default: true}
       },
-      init: function () {
-        this.el.addEventListener('gesture', this.onGesture.bind(this));
+      init: function() {
+        this.el.addEventListener('gesture-rotate', this.onRotate.bind(this));
       },
-      onGesture: function (event) {
-        const rotation = this.el.getAttribute('rotation');
-        this.el.setAttribute('rotation', {
-          x: rotation.x,
-          y: rotation.y + event.detail.rotation * this.data.rotationSpeed,
-          z: rotation.z
-        });
+      onRotate: function(evt) {
+        if (!this.data.enabled) return;
+        this.el.object3D.rotation.y += evt.detail.rotation * (Math.PI / 180);
       }
     });
 
@@ -52,23 +47,22 @@
       loadingAnimation.style.display = 'block';
 
       // Definir um tempo de espera antes de permitir o escaneamento
-      const scanDelay = 1000; // 1 segundo de atraso
+      const scanDelay = 1000;
       setTimeout(() => {
         console.log("Iniciando escaneamento após o atraso");
 
         // Esconder a animação de carregamento após o atraso e ao encontrar o alvo
         sceneEl.addEventListener("targetFound", event => {
           console.log("Alvo encontrado");
-          loadingAnimation.style.display = 'none'; // Esconder carregamento
+          loadingAnimation.style.display = 'none';
         });
 
-        // Verificar se a cena foi carregada completamente
         sceneEl.addEventListener('loaded', () => {
           console.log('Cena carregada');
-          loadingAnimation.style.display = 'none'; // Esconder carregamento ao carregar a cena
+          loadingAnimation.style.display = 'none';
         });
 
-      }, scanDelay); // Atraso antes do escaneamento começar
+      }, scanDelay);
 
       // Timeout adicional para garantir que a animação de carregamento não fique presa
       setTimeout(() => {
@@ -76,7 +70,7 @@
           console.log("Falha na detecção do alvo, ocultando a animação");
           loadingAnimation.style.display = 'none';
         }
-      }, scanDelay + 5000); // 10 segundos após o atraso inicial
+      }, scanDelay + 5000);
     });
   </script>
   <title>Adidas - Ultraboost 5</title>
@@ -98,14 +92,13 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex:0">
+    <a-entity mindar-image-target="targetIndex:0" gesture-detector>
       <a-gltf-model
         src="#avatarModel"
-        scale="0.2 0.2 0.2"  
+        scale="0.18 0.18 0.18"  
         rotation="0 270 0"
         position="0.3 -0.2 0"
-        gesture-detector
-        rotate-on-gesture="rotationSpeed: 0.2">
+        rotate-on-gesture>
       </a-gltf-model>
     </a-entity>
   </a-scene>
