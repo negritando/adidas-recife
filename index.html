@@ -16,7 +16,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
-      display: none;
+      display: block; /* Inicia visível */
     }
     /* Estilos para os botões de controle */
     .control-buttons {
@@ -24,7 +24,8 @@
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
     .control-buttons button {
@@ -46,32 +47,51 @@
       const modelEl = document.querySelector('a-gltf-model');
       const loadingAnimation = document.getElementById('loadingAnimation');
 
-      // Mostrar animação de carregamento ao iniciar a cena
-      loadingAnimation.style.display = 'block';
+      // Garantir que a animação de carregamento seja exibida por pelo menos 3 segundos
+      let minLoadingTime = false;
 
-      // Esconder a animação de carregamento após o atraso e ao encontrar o alvo
+      setTimeout(() => {
+        minLoadingTime = true;
+        if (loadingAnimation.style.display === 'block' && sceneEl.hasLoaded) {
+          loadingAnimation.style.display = 'none';
+        }
+      }, 3000);
+
       sceneEl.addEventListener("targetFound", () => {
-        loadingAnimation.style.display = 'none';
+        if (minLoadingTime) {
+          loadingAnimation.style.display = 'none';
+        }
       });
 
       sceneEl.addEventListener('loaded', () => {
-        loadingAnimation.style.display = 'none';
-      });
-
-      // Timeout adicional para garantir que a animação de carregamento não fique presa
-      setTimeout(() => {
-        if (loadingAnimation.style.display === 'block') {
+        if (minLoadingTime) {
           loadingAnimation.style.display = 'none';
         }
-      }, 6000); // Tempo total de exibição do loading
+      });
 
-      // Funções para rotação do modelo
-      document.getElementById('rotateLeft').addEventListener('click', () => {
+      // Funções para rotação do modelo nos eixos X, Y e Z
+      document.getElementById('rotateXLeft').addEventListener('click', () => {
+        modelEl.object3D.rotation.x += 0.1;
+      });
+
+      document.getElementById('rotateXRight').addEventListener('click', () => {
+        modelEl.object3D.rotation.x -= 0.1;
+      });
+
+      document.getElementById('rotateYLeft').addEventListener('click', () => {
         modelEl.object3D.rotation.y += 0.1;
       });
 
-      document.getElementById('rotateRight').addEventListener('click', () => {
+      document.getElementById('rotateYRight').addEventListener('click', () => {
         modelEl.object3D.rotation.y -= 0.1;
+      });
+
+      document.getElementById('rotateZLeft').addEventListener('click', () => {
+        modelEl.object3D.rotation.z += 0.1;
+      });
+
+      document.getElementById('rotateZRight').addEventListener('click', () => {
+        modelEl.object3D.rotation.z -= 0.1;
       });
     });
   </script>
@@ -97,17 +117,21 @@
       <a-gltf-model
         id="avatarModel"
         src="#avatarModel"
-        scale="0.18 0.18 0.18"  
+        scale="0.15 0.15 0.15"  
         rotation="0 270 0"
         position="0.3 -0.2 0">
       </a-gltf-model>
     </a-entity>
   </a-scene>
 
-  <!-- Botões de controle para rotação -->
+  <!-- Botões de controle para rotação nos eixos X, Y, Z -->
   <div class="control-buttons">
-    <button id="rotateLeft">⟲</button>
-    <button id="rotateRight">⟳</button>
+    <button id="rotateXLeft">X⟲</button>
+    <button id="rotateXRight">X⟳</button>
+    <button id="rotateYLeft">Y⟲</button>
+    <button id="rotateYRight">Y⟳</button>
+    <button id="rotateZLeft">Z⟲</button>
+    <button id="rotateZRight">Z⟳</button>
   </div>
 </body>
 </html>
