@@ -18,8 +18,8 @@
       z-index: 10;
       display: block; /* Inicia visível */
     }
-    /* Estilos para o joystick */
-    .joystick {
+    /* Estilos para a área de controle */
+    .control-area {
       position: absolute;
       bottom: 20px;
       left: 50%;
@@ -30,17 +30,6 @@
       border-radius: 50%;
       touch-action: none;
       user-select: none;
-    }
-    .knob {
-      width: 40px;
-      height: 40px;
-      background-color: white;
-      border-radius: 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
     }
   </style>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -65,37 +54,30 @@
         loadingAnimation.style.display = 'none';
       });
 
-      // Controle de rotação com joystick
-      const joystick = document.querySelector('.joystick');
-      const knob = document.querySelector('.knob');
+      // Controle de rotação com deslize
+      const controlArea = document.querySelector('.control-area');
       let isDragging = false;
       let startX, startY;
 
-      joystick.addEventListener('touchstart', function(event) {
+      controlArea.addEventListener('touchstart', function(event) {
         isDragging = true;
         startX = event.touches[0].clientX;
         startY = event.touches[0].clientY;
       });
 
-      joystick.addEventListener('touchmove', function(event) {
+      controlArea.addEventListener('touchmove', function(event) {
         if (!isDragging) return;
 
         const dx = event.touches[0].clientX - startX;
-        const dy = event.touches[0].clientY - startY;
 
-        // Rotacionar o modelo no eixo Y
+        // Rotacionar o modelo no eixo Y com base no deslize horizontal
         modelEl.object3D.rotation.y += dx * 0.01;
 
-        // Mover o knob de acordo com o movimento do joystick
-        knob.style.transform = `translate(${dx}px, ${dy}px)`;
-
         startX = event.touches[0].clientX;
-        startY = event.touches[0].clientY;
       });
 
-      joystick.addEventListener('touchend', function() {
+      controlArea.addEventListener('touchend', function() {
         isDragging = false;
-        knob.style.transform = 'translate(-50%, -50%)'; // Resetar o knob para o centro
       });
     });
   </script>
@@ -128,9 +110,8 @@
     </a-entity>
   </a-scene>
 
-  <!-- Joystick para controle de rotação no eixo Y -->
-  <div class="joystick">
-    <div class="knob"></div>
-  </div>
+  <!-- Área de controle para rotação no eixo Y -->
+  <div class="control-area"></div>
 </body>
 </html>
+
