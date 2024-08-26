@@ -46,35 +46,25 @@
       const modelEl = document.querySelector('a-gltf-model');
       const loadingAnimation = document.getElementById('loadingAnimation');
 
-      // Garantir que a animação de carregamento seja exibida por pelo menos 3 segundos
-      let minLoadingTime = false;
+      // Mostrar a animação de carregamento
+      loadingAnimation.style.display = 'block';
 
+      // Esconder a animação de carregamento após 3 segundos
       setTimeout(() => {
-        minLoadingTime = true;
-        if (loadingAnimation.style.display === 'block' && sceneEl.hasLoaded) {
-          loadingAnimation.style.display = 'none';
-        }
-      }, 3000);
+        loadingAnimation.style.display = 'none';
+      }, 3000); // 3 segundos
 
-      // Esconder a animação de carregamento após o carregamento e se o tempo mínimo foi atingido
+      // Esconder a animação de carregamento quando o alvo for encontrado
       sceneEl.addEventListener("targetFound", () => {
-        if (minLoadingTime) {
-          loadingAnimation.style.display = 'none';
-        }
+        loadingAnimation.style.display = 'none';
       });
 
-      sceneEl.addEventListener('loaded', () => {
-        if (minLoadingTime) {
-          loadingAnimation.style.display = 'none';
-        }
-      });
-
-      // Funções para rotação do modelo
-      document.getElementById('rotateLeft').addEventListener('click', () => {
+      // Funções para rotação do modelo no eixo Y
+      document.getElementById('rotateYLeft').addEventListener('click', () => {
         modelEl.object3D.rotation.y += 0.1;
       });
 
-      document.getElementById('rotateRight').addEventListener('click', () => {
+      document.getElementById('rotateYRight').addEventListener('click', () => {
         modelEl.object3D.rotation.y -= 0.1;
       });
     });
@@ -108,10 +98,10 @@
     </a-entity>
   </a-scene>
 
-  <!-- Botões de controle para rotação -->
+  <!-- Botões de controle para rotação no eixo Y -->
   <div class="control-buttons">
-    <button id="rotateLeft">clique</button>
-    <button id="rotateRight">⟳</button>
+    <button id="rotateYLeft">Y⟲</button>
+    <button id="rotateYRight">Y⟳</button>
   </div>
 </body>
 </html>
