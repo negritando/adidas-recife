@@ -33,6 +33,18 @@
       background: radial-gradient(circle at 30% 30%, #ffffff, #000000);
       box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
       border: 2px solid #fff;
+      position: relative;
+    }
+    /* Indicador visual de deslize */
+    .indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 4px;
+      background-color: #ffffff;
+      transform: translate(-50%, -50%);
+      border-radius: 2px;
     }
   </style>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -62,6 +74,10 @@
       let isDragging = false;
       let startX;
 
+      // Limites de rotação
+      const minRotation = -Math.PI / 2; // -90 graus
+      const maxRotation = Math.PI / 2;  // 90 graus
+
       controlArea.addEventListener('touchstart', function(event) {
         isDragging = true;
         startX = event.touches[0].clientX;
@@ -71,9 +87,13 @@
         if (!isDragging) return;
 
         const dx = event.touches[0].clientX - startX;
+        let newRotationY = modelEl.object3D.rotation.y + dx * 0.01;
 
-        // Rotacionar o modelo no eixo Y com base no deslize horizontal
-        modelEl.object3D.rotation.y += dx * 0.01;
+        // Limitar a rotação a -90 graus e 90 graus
+        if (newRotationY < minRotation) newRotationY = minRotation;
+        if (newRotationY > maxRotation) newRotationY = maxRotation;
+
+        modelEl.object3D.rotation.y = newRotationY;
 
         startX = event.touches[0].clientX;
       });
@@ -113,6 +133,8 @@
   </a-scene>
 
   <!-- Área de controle para rotação no eixo Y -->
-  <div class="control-area"></div>
+  <div class="control-area">
+    <div class="indicator"></div> <!-- Indicador de direção -->
+  </div>
 </body>
 </html>
