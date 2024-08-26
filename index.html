@@ -30,6 +30,9 @@
       border-radius: 50%;
       touch-action: none;
       user-select: none;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #000000);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+      border: 2px solid #fff;
     }
   </style>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -57,12 +60,11 @@
       // Controle de rotação com deslize
       const controlArea = document.querySelector('.control-area');
       let isDragging = false;
-      let startX, startY;
+      let startX;
 
       controlArea.addEventListener('touchstart', function(event) {
         isDragging = true;
         startX = event.touches[0].clientX;
-        startY = event.touches[0].clientY;
       });
 
       controlArea.addEventListener('touchmove', function(event) {
@@ -114,4 +116,3 @@
   <div class="control-area"></div>
 </body>
 </html>
-
