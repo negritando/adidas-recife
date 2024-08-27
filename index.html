@@ -18,12 +18,37 @@
       z-index: 10;
       display: block; /* Inicia visível */
     }
+    /* Estilos para o joystick */
+    .joystick {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      touch-action: none;
+      user-select: none;
+    }
+    .knob {
+      width: 40px;
+      height: 40px;
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
   </style>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      const sceneEl = document.querySelector('a-scene');
       const modelEl = document.querySelector('a-gltf-model');
       const loadingAnimation = document.getElementById('loadingAnimation');
 
@@ -35,34 +60,42 @@
         loadingAnimation.style.display = 'none';
       }, 3000); // 3 segundos
 
-      // Controle de rotação diretamente no tênis
-      let isDragging = false;
-      let startX;
-      let rotationY = 270; // Rotação inicial em graus
-
-      modelEl.addEventListener('touchstart', function(event) {
-        isDragging = true;
-        startX = event.touches[0].clientX;
+      // Esconder a animação de carregamento quando o alvo for encontrado
+      sceneEl.addEventListener("targetFound", () => {
+        loadingAnimation.style.display = 'none';
       });
 
-      modelEl.addEventListener('touchmove', function(event) {
+      // Controle de rotação com joystick
+      const joystick = document.querySelector('.joystick');
+      const knob = document.querySelector('.knob');
+      let isDragging = false;
+      let startX, startY;
+
+      joystick.addEventListener('touchstart', function(event) {
+        isDragging = true;
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+      });
+
+      joystick.addEventListener('touchmove', function(event) {
         if (!isDragging) return;
 
         const dx = event.touches[0].clientX - startX;
-        rotationY += dx * 0.5; // Sensibilidade ajustada
+        const dy = event.touches[0].clientY - startY;
 
-        // Limitar a rotação entre 180 e 360 graus
-        if (rotationY < 180) rotationY = 180;
-        if (rotationY > 360) rotationY = 360;
+        // Rotacionar o modelo no eixo Y
+        modelEl.object3D.rotation.y += dx * 0.01;
 
-        // Aplicar a rotação
-        modelEl.object3D.rotation.y = THREE.Math.degToRad(rotationY);
+        // Mover o knob de acordo com o movimento do joystick
+        knob.style.transform = `translate(${dx}px, ${dy}px)`;
 
         startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
       });
 
-      modelEl.addEventListener('touchend', function() {
+      joystick.addEventListener('touchend', function() {
         isDragging = false;
+        knob.style.transform = 'translate(-50%, -50%)'; // Resetar o knob para o centro
       });
     });
   </script>
@@ -90,9 +123,14 @@
         src="#avatarModel"
         scale="0.15 0.15 0.15"  
         rotation="0 270 0"
-        position="0.1 -0.2 0">
+        position="0.1 -0.2 0"> <!-- Ajuste a posição do modelo para centralizar -->
       </a-gltf-model>
     </a-entity>
   </a-scene>
+
+  <!-- Joystick para controle de rotação no eixo Y -->
+  <div class="joystick">
+    <div class="knob"></div>
+  </div>
 </body>
 </html>
