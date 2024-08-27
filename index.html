@@ -30,10 +30,10 @@
       user-select: none;
     }
     .joystick.left {
-      left: 10%;
+      left: 20%;
     }
     .joystick.right {
-      right: 10%;
+      right: 20%;
     }
     .knob {
       width: 40px;
@@ -70,42 +70,72 @@
       });
 
       // Controle de rotação com joysticks
-      function setupJoystick(joystickSelector) {
-        const joystick = document.querySelector(joystickSelector);
-        const knob = joystick.querySelector('.knob');
-        let isDragging = false;
-        let startX, startY;
+      const joystickLeft = document.querySelector('.joystick.left');
+      const joystickRight = document.querySelector('.joystick.right');
+      const knobLeft = joystickLeft.querySelector('.knob');
+      const knobRight = joystickRight.querySelector('.knob');
+      let isDraggingLeft = false;
+      let isDraggingRight = false;
+      let startXLeft, startXRight;
 
-        joystick.addEventListener('touchstart', function(event) {
-          isDragging = true;
-          startX = event.touches[0].clientX;
-          startY = event.touches[0].clientY;
-        });
+      // Limites de rotação
+      const rotationLimit = Math.PI / 4; // Limite de 45 graus (90 graus total)
 
-        joystick.addEventListener('touchmove', function(event) {
-          if (!isDragging) return;
-
-          const dx = event.touches[0].clientX - startX;
-          const dy = event.touches[0].clientY - startY;
-
-          // Rotacionar o modelo no eixo Y com base no movimento horizontal de qualquer joystick
-          modelEl.object3D.rotation.y += dx * 0.01;
-
-          // Mover o knob de acordo com o movimento do joystick
-          knob.style.transform = `translate(${dx}px, ${dy}px)`;
-
-          startX = event.touches[0].clientX;
-          startY = event.touches[0].clientY;
-        });
-
-        joystick.addEventListener('touchend', function() {
-          isDragging = false;
-          knob.style.transform = 'translate(-50%, -50%)'; // Resetar o knob para o centro
-        });
+      // Funções de controle refinado
+      function refineRotation(rotation, dx, direction) {
+        rotation += dx * 0.01 * direction;
+        return Math.max(-rotationLimit, Math.min(rotationLimit, rotation));
       }
 
-      setupJoystick('.joystick.left');
-      setupJoystick('.joystick.right');
+      // Controle para o joystick esquerdo (anti-horário)
+      joystickLeft.addEventListener('touchstart', function(event) {
+        isDraggingLeft = true;
+        startXLeft = event.touches[0].clientX;
+      });
+
+      joystickLeft.addEventListener('touchmove', function(event) {
+        if (!isDraggingLeft) return;
+
+        const dx = event.touches[0].clientX - startXLeft;
+
+        // Rotacionar no sentido anti-horário
+        modelEl.object3D.rotation.y = refineRotation(modelEl.object3D.rotation.y, dx, -1);
+
+        // Mover o knob de acordo com o movimento do joystick
+        knobLeft.style.transform = `translate(${dx}px, -50%)`;
+
+        startXLeft = event.touches[0].clientX;
+      });
+
+      joystickLeft.addEventListener('touchend', function() {
+        isDraggingLeft = false;
+        knobLeft.style.transform = 'translate(-50%, -50%)'; // Resetar o knob para o centro
+      });
+
+      // Controle para o joystick direito (horário)
+      joystickRight.addEventListener('touchstart', function(event) {
+        isDraggingRight = true;
+        startXRight = event.touches[0].clientX;
+      });
+
+      joystickRight.addEventListener('touchmove', function(event) {
+        if (!isDraggingRight) return;
+
+        const dx = event.touches[0].clientX - startXRight;
+
+        // Rotacionar no sentido horário
+        modelEl.object3D.rotation.y = refineRotation(modelEl.object3D.rotation.y, dx, 1);
+
+        // Mover o knob de acordo com o movimento do joystick
+        knobRight.style.transform = `translate(${dx}px, -50%)`;
+
+        startXRight = event.touches[0].clientX;
+      });
+
+      joystickRight.addEventListener('touchend', function() {
+        isDraggingRight = false;
+        knobRight.style.transform = 'translate(-50%, -50%)'; // Resetar o knob para o centro
+      });
     });
   </script>
 </head>
@@ -137,7 +167,7 @@
     </a-entity>
   </a-scene>
 
-  <!-- Dois joysticks para controle de rotação no eixo Y -->
+  <!-- Joysticks para controle de rotação -->
   <div class="joystick left">
     <div class="knob"></div>
   </div>
