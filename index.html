@@ -88,10 +88,8 @@
           const dx = event.touches[0].clientX - startX;
           const dy = event.touches[0].clientY - startY;
 
-          // Rotacionar o modelo no eixo Y com base no joystick da direita
-          if (joystickSelector === '.joystick.right') {
-            modelEl.object3D.rotation.y += dx * 0.01;
-          }
+          // Rotacionar o modelo no eixo Y com base no movimento horizontal de qualquer joystick
+          modelEl.object3D.rotation.y += dx * 0.01;
 
           // Mover o knob de acordo com o movimento do joystick
           knob.style.transform = `translate(${dx}px, ${dy}px)`;
