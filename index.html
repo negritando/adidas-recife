@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -17,22 +18,6 @@
       transform: translate(-50%, -50%);
       z-index: 10;
       display: block; /* Inicia visível */
-    }
-    /* Estilos para a área de controle */
-    .control-area {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 100px;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 50%;
-      touch-action: none;
-      user-select: none;
-      background: radial-gradient(circle at 30% 30%, #ffffff, #000000);
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-      border: 2px solid #fff;
     }
   </style>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -57,17 +42,16 @@
         loadingAnimation.style.display = 'none';
       });
 
-      // Controle de rotação com deslize
-      const controlArea = document.querySelector('.control-area');
+      // Controle de rotação diretamente no tênis
       let isDragging = false;
       let startX;
 
-      controlArea.addEventListener('touchstart', function(event) {
+      modelEl.addEventListener('touchstart', function(event) {
         isDragging = true;
         startX = event.touches[0].clientX;
       });
 
-      controlArea.addEventListener('touchmove', function(event) {
+      modelEl.addEventListener('touchmove', function(event) {
         if (!isDragging) return;
 
         const dx = event.touches[0].clientX - startX;
@@ -78,7 +62,7 @@
         startX = event.touches[0].clientX;
       });
 
-      controlArea.addEventListener('touchend', function() {
+      modelEl.addEventListener('touchend', function() {
         isDragging = false;
       });
     });
@@ -111,8 +95,5 @@
       </a-gltf-model>
     </a-entity>
   </a-scene>
-
-  <!-- Área de controle para rotação no eixo Y -->
-  <div class="control-area"></div>
 </body>
 </html>
