@@ -18,18 +18,22 @@
       z-index: 10;
       display: block; /* Inicia visível */
     }
-    /* Estilos para o joystick */
+    /* Estilos para os joysticks */
     .joystick {
       position: absolute;
       bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
       width: 100px;
       height: 100px;
       background-color: rgba(0, 0, 0, 0.5);
       border-radius: 50%;
       touch-action: none;
       user-select: none;
+    }
+    .joystick.left {
+      left: 10%;
+    }
+    .joystick.right {
+      right: 10%;
     }
     .knob {
       width: 40px;
@@ -65,38 +69,45 @@
         loadingAnimation.style.display = 'none';
       });
 
-      // Controle de rotação com joystick
-      const joystick = document.querySelector('.joystick');
-      const knob = document.querySelector('.knob');
-      let isDragging = false;
-      let startX, startY;
+      // Controle de rotação com joysticks
+      function setupJoystick(joystickSelector) {
+        const joystick = document.querySelector(joystickSelector);
+        const knob = joystick.querySelector('.knob');
+        let isDragging = false;
+        let startX, startY;
 
-      joystick.addEventListener('touchstart', function(event) {
-        isDragging = true;
-        startX = event.touches[0].clientX;
-        startY = event.touches[0].clientY;
-      });
+        joystick.addEventListener('touchstart', function(event) {
+          isDragging = true;
+          startX = event.touches[0].clientX;
+          startY = event.touches[0].clientY;
+        });
 
-      joystick.addEventListener('touchmove', function(event) {
-        if (!isDragging) return;
+        joystick.addEventListener('touchmove', function(event) {
+          if (!isDragging) return;
 
-        const dx = event.touches[0].clientX - startX;
-        const dy = event.touches[0].clientY - startY;
+          const dx = event.touches[0].clientX - startX;
+          const dy = event.touches[0].clientY - startY;
 
-        // Rotacionar o modelo no eixo Y
-        modelEl.object3D.rotation.y += dx * 0.01;
+          // Rotacionar o modelo no eixo Y com base no joystick da direita
+          if (joystickSelector === '.joystick.right') {
+            modelEl.object3D.rotation.y += dx * 0.01;
+          }
 
-        // Mover o knob de acordo com o movimento do joystick
-        knob.style.transform = `translate(${dx}px, ${dy}px)`;
+          // Mover o knob de acordo com o movimento do joystick
+          knob.style.transform = `translate(${dx}px, ${dy}px)`;
 
-        startX = event.touches[0].clientX;
-        startY = event.touches[0].clientY;
-      });
+          startX = event.touches[0].clientX;
+          startY = event.touches[0].clientY;
+        });
 
-      joystick.addEventListener('touchend', function() {
-        isDragging = false;
-        knob.style.transform = 'translate(-50%, -50%)'; // Resetar o knob para o centro
-      });
+        joystick.addEventListener('touchend', function() {
+          isDragging = false;
+          knob.style.transform = 'translate(-50%, -50%)'; // Resetar o knob para o centro
+        });
+      }
+
+      setupJoystick('.joystick.left');
+      setupJoystick('.joystick.right');
     });
   </script>
 </head>
@@ -128,8 +139,11 @@
     </a-entity>
   </a-scene>
 
-  <!-- Joystick para controle de rotação no eixo Y -->
-  <div class="joystick">
+  <!-- Dois joysticks para controle de rotação no eixo Y -->
+  <div class="joystick left">
+    <div class="knob"></div>
+  </div>
+  <div class="joystick right">
     <div class="knob"></div>
   </div>
 </body>
